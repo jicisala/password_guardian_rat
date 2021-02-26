@@ -1,20 +1,10 @@
 # @Time : 2021/2/4 10:52 
 
-# @Author : songshangru
-
-# @File : EncryptionRat.py
-
-# @Software: PyCharm
-import time
-
+# @Author : Upgrade(570492547@qq.com)
 from libs.password.password_generate import password_generate
-from libs.password.Encryptor import Encryptor
-
-
-# TODO(570492547@qq.com): 将对加密文本得操作进行分离
-# TODO(570492547@qq.com): 对数据类型进行整理
+from core.Encryptor import Encryptor
 # TODO(570492547@qq.com): 对外部输入数据进行验证
-from core.EncryptionText import EncryptionText
+from core.model.EncryptionText import EncryptionText
 
 
 class EncryptionRat:
@@ -24,7 +14,6 @@ class EncryptionRat:
 
     Attributes:
         encrypt_text str: 加密文本所在的位置
-
     """
 
     def __init__(self, encrypt_text: EncryptionText):
@@ -75,10 +64,8 @@ class EncryptionRat:
         # 获得密码保存id
         password_id = self.encrypt_text.get_new_password_id()
 
-        write_content = str(password_id) + ' ' + time.strftime("%Y-%m-%d %H:%M:%S",
-                                                               time.localtime()) + ' ' + encrypt_result + ' ' + describe + '\n'
-        if self.encrypt_text.password_add(write_content):
-            print("密码保存成功")
+        # save the result
+        self.encrypt_text.password_add(password_id, encrypt_result, describe)
 
     def password_get(self):
         """获得所保存的密码
@@ -115,11 +102,3 @@ class EncryptionRat:
                     print('解密结果为:' + decrypt_result)
                 except UnicodeDecodeError:
                     print('加密密码错误')
-
-
-
-if __name__ == '__main__':
-    x = EncryptionRat()
-    new_password = x.password_generate(16, True, True, True, [])
-    # x.password_save(password=password, describe='测试')
-    x.password_get()

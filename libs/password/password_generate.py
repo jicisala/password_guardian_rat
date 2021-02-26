@@ -1,10 +1,6 @@
 # @Time : 2021/2/4 9:32 
 
-# @Author : songshangru
-
-# @File : password_generate.py
-
-# @Software: PyCharm
+# @Author : Upgrade(570492547@qq.com)
 import random
 
 

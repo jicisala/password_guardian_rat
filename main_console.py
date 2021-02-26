@@ -1,15 +1,11 @@
 # @Time : 2021/2/5 11:31 
 
-# @Author : songshangru
-
-# @File : main.py 
-
-# @Software: PyCharm
+# @Author : Upgrade(570492547@qq.com)
 # TODO(570492547@qq.com): 增加密码的删除功能
-from projects.password_manager.core.EncryptionRat import EncryptionRat
-from projects.password_manager.core.EncryptionText import EncryptionText
+from core.controller.EncryptionRat import EncryptionRat
+from core.model.EncryptionText import EncryptionText
 
-print("密码保险箱0.3\n"
+print("加密鼠0.3\n"
       "作者：Upgrade\n"
       "请选择你要使用的加密文本（输入为空则为默认加密文本）")
 encryption_text_name = input()

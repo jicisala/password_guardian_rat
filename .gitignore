@@ -1,3 +1,4 @@
 .idea/*
 .core/__pycache__/*
 .libs/__pycache__/*
+/default_encrypt_text.txt

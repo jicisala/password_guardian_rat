@@ -1,10 +1,8 @@
 # @Time : 2021/2/24 14:36 
 
-# @Author : Upgrade(jicisala@126.com)
+# @Author : Upgrade(570492547@qq.com)
+import time
 
-# @File : EncryptionText.py 
-
-# @Software: PyCharm
 from libs.file_handle import check_file_exists
 from libs.file_handle import file_create
 from libs.string_type_validate import is_date
@@ -75,7 +73,10 @@ class EncryptionText:
                     return False
         return True
 
-    def password_add(self, password_info):
+    def password_add(self, password_id, encrypt_result, describe):
+        """Write password to encrypted text"""
+        password_info = f'{password_id} {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())} {encrypt_result} {describe}\n'
+
         with open(self.encrypt_text, 'a', encoding='utf8') as f:
             f.write(password_info)
             return True
@@ -112,8 +113,3 @@ class EncryptionText:
 
                 password_list.append([password_id, create_time, describe, password])
         return password_list
-
-
-if __name__ == '__main__':
-    _ = EncryptionText('E:\Projects\Python-projects\Creative Workshop\projects\password_manager\default_encrypt_text.txt')
-    print(_.encrypt_text_format_check())

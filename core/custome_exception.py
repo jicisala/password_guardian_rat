@@ -1,10 +1,6 @@
 # @Time : 2021/2/24 16:43 
 
-# @Author : Upgrade(jicisala@126.com)
-
-# @File : custome_exception.py 
-
-# @Software: PyCharm
+# @Author : Upgrade(570492547@qq.com)
 
 
 class EncryptTextFormatError(Exception):

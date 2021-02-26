@@ -1,15 +1,12 @@
 # @Time : 2021/2/4 11:01 
 
-# @Author : songshangru
-
-# @File : Encryptor.py
-
-# @Software: PyCharm
+# @Author : Upgrade(570492547@qq.com)
+from binascii import b2a_hex, a2b_hex
 import hashlib
+
 import rsa
 from Cryptodome.Cipher import AES
 from Cryptodome import Random
-from binascii import b2a_hex, a2b_hex
 
 
 class Encryptor:
@@ -30,23 +27,23 @@ class Encryptor:
         """实例初始化函数，对加密类型进行确定，根据加密类型生成相应的加密对象"""
         self.encrypt_type = encrypt_type
         if encrypt_type.lower() == 'rsa':
-            self.encryptor = Rsa(key_pub=kwargs['key_pub'], key_priv=kwargs['key_priv'])
+            self.encryptor_core = Rsa(key_pub=kwargs['key_pub'], key_priv=kwargs['key_priv'])
         elif encrypt_type.lower() == 'aes':
-            self.encryptor = Aes(key=kwargs['key'])
+            self.encryptor_core = Aes(key=kwargs['key'])
         elif encrypt_type.lower() == 'md5':
-            self.encryptor = Md5()
+            self.encryptor_core = Md5()
         else:
             assert False, '所使用的加密方式暂不支持，请联系作者以进行添加'
 
     def encrypt(self, raw_content):
         """统一的加密操作"""
-        encrypt_result = self.encryptor.encrypt(raw_content)
+        encrypt_result = self.encryptor_core.encrypt(raw_content)
 
         return encrypt_result
 
     def decrypt(self, encrypt_content):
         """统一的解密操作"""
-        decrypt_content = self.encryptor.decrypt(encrypt_content)
+        decrypt_content = self.encryptor_core.decrypt(encrypt_content)
 
         return decrypt_content
 
@@ -79,10 +76,10 @@ class Aes:
     def __init__(self, key):
         self.key = bytes(key, encoding='utf8')
         self.iv = Random.new().read(AES.block_size)
-        self.mycipher = AES.new(self.key, AES.MODE_CFB, self.iv)
+        self.cipher = AES.new(self.key, AES.MODE_CFB, self.iv)
 
     def encrypt(self, raw_content):
-        encrypt_result = self.iv + self.mycipher.encrypt(raw_content.encode())
+        encrypt_result = self.iv + self.cipher.encrypt(raw_content.encode())
 
         encrypt_result = b2a_hex(encrypt_result).decode()
         return encrypt_result
@@ -90,8 +87,8 @@ class Aes:
     def decrypt(self, encrypt_content):
         encrypt_content = a2b_hex(encrypt_content.encode())
 
-        mydecrypt = AES.new(self.key, AES.MODE_CFB, encrypt_content[:16])
-        decrypt_result = mydecrypt.decrypt(encrypt_content[16:]).decode()
+        decrypt = AES.new(self.key, AES.MODE_CFB, encrypt_content[:16])
+        decrypt_result = decrypt.decrypt(encrypt_content[16:]).decode()
 
         return decrypt_result
 
@@ -107,22 +104,6 @@ class Md5:
         return result
 
     def decrypt(self, encrypt_content):
-        print('md5加密无法解密')
+        print('MD5无法被解密')
+
         return False
-
-
-if __name__ == '__main__':
-    rsa = Encryptor(encrypt_type='rsa')
-    # md5 = Encryptor(encrypt_type='md5')
-    # key = md5.encrypt(raw_content='jingwan0111')
-    #
-    # aes_en = Encryptor(encrypt_type='aes', key=key)
-    # en_res = aes_en.encrypt(raw_content='wanjing0111')
-    #
-    # aes_de = Encryptor(encrypt_type='aes', key=key)
-    # de_res = aes_de.decrypt(en_res)
-    #
-    # print(de_res)
-
-
-

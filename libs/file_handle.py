@@ -1,14 +1,19 @@
 # @Time : 2021/2/24 14:54 
 
-# @Author : Upgrade(jicisala@126.com)
-
-# @File : file_handle.py 
-
-# @Software: PyCharm
+# @Author : Upgrade(570492547@qq.com)
 import os
 
 
 def check_file_exists(file_path: str) -> bool:
+    """check if the file exists
+
+    Args:
+        file_path: file path
+
+    Returns:
+        bool: True or False
+
+    """
     if os.path.exists(file_path):
         return True
     else:
