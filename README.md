@@ -16,11 +16,22 @@
 
 密码的获取：将会把目前所有的密码以及其描述列举出来，可以通过id进行选择，然后输入加密密码进行解密。
 
+更新说明：
+
+v0.5:
+修复了一些bug，使用大量设计模式对软件结构进行了重构，以增强扩展性，可维护性，可读性，方便后续的服务器端开发
+
+
 # password_guardian_rat
 Author: Upgrade(570492547@qq.com)
 Version: 0.5
 
 Note: requires.txt needs to be installed before use this software.
+
+## update instructions
+
+v0.5:
+Fix some bugs, use a large number of design patterns to reconstruct the software structure, in order to enhance the scalability, maintainability, readability, and facilitate the subsequent server-side development
 
 ## Software description：
 
@@ -39,3 +50,4 @@ Password generation: This program comes with password generation, can generate r
 Password saving: the password to be saved can use the generated random password or the password prepared by yourself, and then write the description and encrypt the secret password according to the requirements. It is very important to encrypt the password. If you forget, the saved password will not be decrypted
 
 Password acquisition: all current passwords and their descriptions will be listed, which can be selected by ID, and then input the encrypted password to decrypt
+
