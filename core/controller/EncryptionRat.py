@@ -2,9 +2,9 @@
 
 # @Author : Upgrade(570492547@qq.com)
 from libs.password.password_generate import password_generate
-from core.Encryptor import Encryptor
+from core.encrypt.encryptor import Encryptor
+from core.model.EncryptionDataHandle import EncryptionDataHandle
 # TODO(570492547@qq.com): 对外部输入数据进行验证
-from core.model.EncryptionText import EncryptionText
 
 
 class EncryptionRat:
@@ -13,14 +13,14 @@ class EncryptionRat:
     根据需求生成随机密码，并对外提供各种加密方式统一的访问接口，目前支持的加密方式有md5，AES，RSA
 
     Attributes:
-        encrypt_text str: 加密文本所在的位置
+        encrypt_storage_obj str: 加密文本所在的位置
     """
 
-    def __init__(self, encrypt_text: EncryptionText):
-        self.encrypt_text = encrypt_text
+    def __init__(self, encrypt_storage_obj):
+        self.encryption_data_handle = EncryptionDataHandle(encrypt_storage_obj)
 
     @staticmethod
-    def password_generate(password_length, if_number, if_letter, if_symbol, chars_exclude):
+    def password_generate(password_length: int, if_number: bool, if_letter: bool, if_symbol: bool, chars_exclude: bool) -> str:
         """根据要求生成密码
 
         使用的是已有工具类中的密码生成函数
@@ -40,7 +40,7 @@ class EncryptionRat:
 
         return password
 
-    def password_save(self, password, describe):
+    def password_add(self, password: str, description: str, open_box_password: str) -> bool:
         """密码保存
 
         将密码根据加密后保存到相应的加密文本中
@@ -50,55 +50,51 @@ class EncryptionRat:
             describe str: 该密码的描述
 
         """
-        # 给出加密密码
-        print('请给出加密密码')
-        open_box_password = input()
-
         # 通过md5算出密钥
         key = Encryptor(encrypt_type='md5').encrypt(open_box_password)
 
         # 使用密钥对密码进行加密
         aes = Encryptor(encrypt_type='aes', key=key)
-        encrypt_result = aes.encrypt(password)
-
-        # 获得密码保存id
-        password_id = self.encrypt_text.get_new_password_id()
+        encrypted_password = aes.encrypt(password)
 
         # save the result
-        self.encrypt_text.password_add(password_id, encrypt_result, describe)
+        try:
+            self.encryption_data_handle.password_add(encrypted_password, description)
+            return True
+        except Exception as e:
+            raise e
 
-    def password_get(self):
-        """获得所保存的密码
+    def password_get(self, password_id: str, open_box_password: str) -> str:
+        """get require password
 
-        从已保存的密码中获得需要的密码
+        get require password form existing password
 
         """
-        password_list = self.encrypt_text.get_all_password()
-        if not password_list:
-            print('该加密文本为空')
-            return False
-
-        print('目前所有密码如下,请选择需要查看的密码的id')
-
-        for password in password_list:
-            print(' '.join(password[:-1]))
-
-        password_id = input()
-
-        # 给出开箱密码
-        print('请给出加密密码')
-        open_box_password = input()
-
         # 通过md5算出密钥
         key = Encryptor(encrypt_type='md5').encrypt(open_box_password)
 
         # 使用密钥对密码进行解密
-        for password in password_list:
-            if password[0] == password_id:
-                try:
-                    aes = Encryptor(encrypt_type='aes', key=key)
-                    decrypt_result = aes.decrypt(password[3])
+        password = self.encryption_data_handle.password_get(password_id)
 
-                    print('解密结果为:' + decrypt_result)
-                except UnicodeDecodeError:
-                    print('加密密码错误')
+        try:
+            aes = Encryptor(encrypt_type='aes', key=key)
+            decrypt_result = aes.decrypt(password['password'])
+
+            return decrypt_result
+        except UnicodeDecodeError:
+            print('加密密码错误')
+
+    def password_get_all(self):
+        result = self.encryption_data_handle.password_get_all()
+
+        if not result:
+            print('无被加密密码')
+            return ''
+
+        return result
+
+    def password_del(self):
+        pass
+
+    def password_update(self):
+        pass
